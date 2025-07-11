@@ -4,10 +4,10 @@ const path = require('path');
 //Set our multer storage
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cd(null, 'uploads/');
+        cb(null, 'uploads/');
     },
     filename: function (req, file, cb) {
-        cd(null,
+        cb(null,
             file.fieldname + '-' + Date.now() + path.extname(file.originalname)
         )
     }
@@ -23,3 +23,13 @@ const checkFileFilter = (req, file, cb) => {
         cb(new Error('Not an image! Plaese upload olny images'))
     }
 }
+
+// multer middleware
+
+module.exports = multer({
+    storage: storage,
+    fileFilter: checkFileFilter,
+    limits: {
+        fileSize: 5 * 1024 * 1024, //5mb file limit
+    },
+});
